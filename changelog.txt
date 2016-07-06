@@ -1,0 +1,17 @@
+EDIT [27/06/2016] - V1.3.1
+    Correction du bug d'affichage du temps de live ("-1an et -1mois et -1jour et -2heures et -32minutes et -6secondes")
+
+EDIT [10/06/2016] - V1.3
+    Ajout d'option :
+    - Possibilité de masquer les notifications,
+    - D'ouvrir automatiquement les informations du live,
+    - De régler le volume par default du player
+    - Et de choisir le temps d'actualisation en arrière plan.
+
+    Création du changelog
+
+    Correction de bug
+
+    Changement du logo lors d'un live : usage du logo Wankil VOD (Bannane sur fond rouge)
+
+    Ajout d'un lien permettant l'envoi d'un signalement de bug
