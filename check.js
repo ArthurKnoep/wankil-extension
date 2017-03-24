@@ -1,5 +1,6 @@
 jQuery(document).ready(function() {
-    var chaine = ["lainkk", "gl_laink", "gl_terracid"];
+    var chaine = ["wankilstudio", "laink", "terracid"];
+    var cID = "3i3mp02jq4d7tbbkhfjzhtbpx3iou99";
     var chaineAffichage = ["Laink et Terracid", "Laink", "Terracid"];
     var dateDeb = Array(3);
     var inLive = [false, false, false];
@@ -64,7 +65,7 @@ jQuery(document).ready(function() {
             }
         };
 
-        xhr.open("GET", "https://api.twitch.tv/kraken/streams/" + chaine[search] /*+"?reload="+new Date().getTime()*/ , true);
+        xhr.open("GET", "https://api.twitch.tv/kraken/streams/" + chaine[search] + "?client_id=" + cID/*+"?reload="+new Date().getTime()*/ , true);
         xhr.send(null);
     }
 

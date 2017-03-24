@@ -1,3 +1,15 @@
+EDIT [10/12/2016] - v1.4.1
+    Modification des noms des chaines Twitch (gl_terracid devient terracid, gl_laink devient laink)
+
+EDIT [05/12/2016] - V1.4
+    Ajout de flocon de neige en Décembre
+
+EDIT [18/09/2016] - V1.3.3
+    Adaptation de l'extension à la nouvelle API Twitch
+
+EDIT [17/09/2016] - V1.3.2
+    Arrêt du fonctionnement de l'extension suite à une modification de l'API Twitch
+
 EDIT [27/06/2016] - V1.3.1
     Correction du bug d'affichage du temps de live ("-1an et -1mois et -1jour et -2heures et -32minutes et -6secondes")
 

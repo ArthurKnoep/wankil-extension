@@ -18,6 +18,21 @@ $(function() {
         }, function() {});
     });
 
+    //-------Mode Noël--------//
+    chrome.storage.sync.get('modeNoel', function(get) { //Vérif si le parametre existe
+        if (get['modeNoel'] != null) {
+            $("#noel" + get['modeNoel']).attr('selected', 'true');
+        } else {
+            $("#noel1").attr('selected', 'true');
+        }
+    });
+
+    $('#noelMode').change(function() { // modif parametre
+        chrome.storage.sync.set({
+            'modeNoel': $('.selNoelMode:selected').attr('value')
+        }, function() {});
+    });
+
     //--------Notifictaion---------//
     /*chrome.storage.sync.get('notif', function(get) { //Vérif si le parametre existe
         if (get['notif'] != null) {

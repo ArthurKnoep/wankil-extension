@@ -1,4 +1,5 @@
-var chaine = ["lainkk", "gl_laink", "gl_terracid"];
+var chaine = ["wankilstudio", "laink", "terracid"];
+var cID = "3i3mp02jq4d7tbbkhfjzhtbpx3iou99";
 var sendNotif = [false, false, false];
 var search = 0;
 var nbLive = 0;
@@ -57,7 +58,7 @@ function request(callback) {
         }
     };
 
-    xhr.open("GET", "https://api.twitch.tv/kraken/streams/" + chaine[search], true);
+    xhr.open("GET", "https://api.twitch.tv/kraken/streams/" + chaine[search] + "?client_id=" + cID, true);
     xhr.send(null);
 }
 
