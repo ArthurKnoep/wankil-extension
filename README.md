@@ -1,4 +1,4 @@
-# wankil-extension
+# Wankil Extension
 Extension Wankil
 
 Code source de l'extension Wankil Studio : [Chrome Store](https://chrome.google.com/webstore/detail/live-checker-wankil-studi/jephlofdididpkdahchljhbmgpekhfne)
