@@ -1,3 +1,9 @@
+EDIT [25/03/2017] - v1.4.3
+    Correction de l'affichage du temps de live (Décallage d'une heure avec le vrai début du live (Du à une modification de l'API))
+
+EDIT [25/03/2017] - v1.4.2
+    Modification des noms des chaines Twitch (lainkk devient wankilstudio)
+
 EDIT [10/12/2016] - v1.4.1
     Modification des noms des chaines Twitch (gl_terracid devient terracid, gl_laink devient laink)
 
