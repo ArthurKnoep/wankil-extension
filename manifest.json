@@ -19,7 +19,7 @@
     "notifications",
     "unlimitedStorage",
     "storage",
-    "http://api.twitch.tv/kraken/streams/lainkk"
+    "http://api.twitch.tv/*"
   ],
   "web_accessible_resources": [
     "img/icon.png"
