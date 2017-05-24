@@ -148,7 +148,7 @@ jQuery(document).ready(function() {
                     var Sd = jsonRep["stream"]["created_at"].slice(17, 19);
 
                     /*var later = new Date(Ad, (Mod-1), Jd, Hd, Md, Sd);*/ //création d'un objet Date avec la date de la création du stream
-                    var later = new Date(Ad, (Mod - 1), Jd, (Hd - (-1)), Md, Sd);
+                    var later = new Date(Ad, (Mod - 1), Jd, (parseInt(Hd) + 2), Md, Sd);
                     var tempS = Math.floor((now - later) / 1000); //récupération du nombre de seconde du live (date actuelle - date de création du stream), on divise par 1000 car résultat en ms
                     if (tempS < 0)
                     {
