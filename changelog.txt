@@ -1,3 +1,9 @@
+EDIT [19/01/2018] - v1.4.5
+    Modification mineur
+
+EDIT [24/05/2017] - v1.4.4
+     Compensation du décallage horaire
+
 EDIT [25/03/2017] - v1.4.3
     Correction de l'affichage du temps de live (Décallage d'une heure avec le vrai début du live (Du à une modification de l'API))
 
