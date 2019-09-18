@@ -58,7 +58,8 @@ function request(callback) {
         }
     };
 
-    xhr.open("GET", "https://api.twitch.tv/kraken/streams/" + chaine[search] + "?client_id=" + cID, true);
+    xhr.open("GET", "https://api.twitch.tv/helix/streams?user_login=" + chaine[search], true);
+    xhr.setRequestHeader('Client-ID', cID);
     xhr.send(null);
 }
 
@@ -99,26 +100,26 @@ function readData(twitchRep) {
     } else {
         var jsonRep = JSON.parse(twitchRep);
 
-        if (jsonRep["stream"] == null) {
+        if (jsonRep["data"].length === 0) {
             sendNotif[search] = false;
         } else {
             nbLive++;
             /*chrome.browserAction.setBadgeText({text: "Live"});*/
-            if (sendNotif[search] == false && notif == 1) {
+            if (sendNotif[search] == false && notif === 1) {
                 var optionsLainkk = {
-                    body: "Laink et Terracid sont en live !!\n" + jsonRep["stream"]["channel"]["status"],
+                    body: "Laink et Terracid sont en live !!\n" + jsonRep["data"][0]["title"],
                     icon: "img/icon.png",
                     /*icon: jsonRep["stream"]["preview"]["medium"]*/
                 }
 
                 var optionsLaink = {
-                    body: 'Laink est en live !!\n' + jsonRep["stream"]["channel"]["status"],
+                    body: 'Laink est en live !!\n' + jsonRep["data"][0]["title"],
                     icon: "img/icon.png"
                     /*icon: jsonRep["stream"]["preview"]["medium"]*/
                 }
 
                 var optionsTerracid = {
-                    body: 'Terracid et en live !!\n' + jsonRep["stream"]["channel"]["status"],
+                    body: 'Terracid et en live !!\n' + jsonRep["data"][0]["title"],
                     icon: "img/icon.png"
                     /*icon: jsonRep["stream"]["preview"]["medium"]*/
                 }
@@ -130,8 +131,8 @@ function readData(twitchRep) {
                         type:    "basic",
                         iconUrl: "img/icon.png",
                         title:   "Wankil Studio",
-                        message: "Laink et Terracid sont en live !!\n" + jsonRep["stream"]["channel"]["status"],
-                        contextMessage: "Sur : " + jsonRep["stream"]["game"],
+                        message: "Laink et Terracid sont en live !!\n" + jsonRep["data"][0]["title"],
+                        // contextMessage: "Sur : " + jsonRep["stream"]["game"],
                         buttons: [{
                             title: "Ouvrir le player",
                             iconUrl: "img/twitch.png"
@@ -147,8 +148,8 @@ function readData(twitchRep) {
                         type:    "basic",
                         iconUrl: "img/icon.png",
                         title:   "Wankil Studio",
-                        message: "Laink est en live !!\n" + jsonRep["stream"]["channel"]["status"],
-                        contextMessage: "Sur : " + jsonRep["stream"]["game"],
+                        message: "Laink est en live !!\n" + jsonRep["data"][0]["title"],
+                        // contextMessage: "Sur : " + jsonRep["stream"]["game"],
                         buttons: [{
                             title: "Ouvrir le player",
                             iconUrl: "img/twitch.png"
@@ -164,8 +165,8 @@ function readData(twitchRep) {
                         type:    "basic",
                         iconUrl: "img/icon.png",
                         title:   "Wankil Studio",
-                        message: "Terracid est en live !!\n" + jsonRep["stream"]["channel"]["status"],
-                        contextMessage: "Sur : " + jsonRep["stream"]["game"],
+                        message: "Terracid est en live !!\n" + jsonRep["data"][0]["title"],
+                        // contextMessage: "Sur : " + jsonRep["stream"]["game"],
                         buttons: [{
                             title: "Ouvrir le player",
                             iconUrl: "img/twitch.png"

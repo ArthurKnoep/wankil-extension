@@ -1,4 +1,4 @@
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     var chaine = ["wankilstudio", "laink", "terracid"];
     var cID = "3i3mp02jq4d7tbbkhfjzhtbpx3iou99";
     var chaineAffichage = ["Laink et Terracid", "Laink", "Terracid"];
@@ -9,18 +9,18 @@ jQuery(document).ready(function() {
     //--------Récuperation des parametre-------//
     var openInfo = "";
     var volume = "";
-    chrome.storage.sync.get('volume', function(get) { //Vérif si le parametre existe
+    chrome.storage.sync.get('volume', function (get) { //Vérif si le parametre existe
         if (get['volume'] != null) {
             volume = get['volume'];
             if (volume == 0) {
-              volume = 0.001;
+                volume = 0.001;
             }
         } else {
             volume = 1;
         }
     });
 
-    chrome.storage.sync.get('infoLive', function(get) { //Vérif si le parametre existe
+    chrome.storage.sync.get('infoLive', function (get) { //Vérif si le parametre existe
         if (get['infoLive'] != null) {
             openInfo = get['infoLive'];
         } else {
@@ -53,7 +53,7 @@ jQuery(document).ready(function() {
     function request(callback) {
         var xhr = getXMLHttpRequest();
 
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
                 callback(xhr.responseText);
             }
@@ -65,7 +65,28 @@ jQuery(document).ready(function() {
             }
         };
 
-        xhr.open("GET", "https://api.twitch.tv/kraken/streams/" + chaine[search] + "?client_id=" + cID/*+"?reload="+new Date().getTime()*/ , true);
+        xhr.open("GET", "https://api.twitch.tv/helix/streams?user_login=" + chaine[search], true);
+        xhr.setRequestHeader('Client-ID', cID);
+        xhr.send(null);
+    }
+
+    function getGameInfo(gameId, cb) {
+        var xhr = getXMLHttpRequest();
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+                cb(xhr.responseText);
+            }
+            if (xhr.readyState == 4 && (xhr.status != 200 && xhr.status != 0)) { //En cas d'erreur on relance la requete dans les 1s
+                var loader = document.getElementById('loader'); //cacher l'icone de chargement
+                loader.style.display = "none";
+                var doc = document.getElementById(chaine[search]);
+                doc.innerHTML = "Une erreur interne c'est produite<br>La communication avec Twitch à échoué<br>Code d'erreur : " + xhr.status;
+            }
+        };
+
+        xhr.open("GET", "https://api.twitch.tv/helix/games?id=" + gameId, true);
+        xhr.setRequestHeader('Client-ID', cID);
         xhr.send(null);
     }
 
@@ -76,7 +97,7 @@ jQuery(document).ready(function() {
         var openButton = document.getElementById(chaine[search] + "Button");
         var doc = document.getElementById(chaine[search]);
 
-        setTimeout(function() {
+        setTimeout(function () {
             if (twitchRep == "") {
                 doc.innerHTML = "Vérifier votre connexion internet";
 
@@ -88,7 +109,7 @@ jQuery(document).ready(function() {
                 var jsonRep = JSON.parse(twitchRep);
                 doc.style.whiteSpace = "pre";
 
-                if (jsonRep["stream"] == null) { //Si le live est hors ligne "stream" vaut null
+                if (jsonRep["data"].length === 0) { //Si le live est hors ligne "data" est vide
                     doc.innerHTML = chaineAffichage[search] + " : Pas en live :'(";
                     var recIcon = document.createElement("img"); //ajout de l'icone "point noir"
                     recIcon.src = "img/norec.png";
@@ -119,42 +140,34 @@ jQuery(document).ready(function() {
                     doc.innerHTML = chaineAffichage[search] + " en live !!!! <br>"; //ajout d'un titre
 
                     var title = document.createElement("span"); //ajout du nom du live
-                    title.innerHTML = "Titre : " + jsonRep["stream"]["channel"]["status"] + "<br>";
+                    title.innerHTML = "Titre : " + jsonRep["data"][0]["title"] + "<br>";
                     title.id = "title" + search;
                     title.className = "infos";
                     doc.appendChild(title);
 
-                    // ajout du nom du jeu
-                    var game = document.createElement("span");
-                    game.id = "game" + search;
-                    game.className = "infos";
-                    game.innerHTML = "Jeu : " + jsonRep["stream"]["game"] + "<br>";
-                    doc.appendChild(game);
+                    getGameInfo(jsonRep["data"][0]["game_id"], function(gameInfo) {
+                        if (gameInfo === "") {
+                            return;
+                        }
+                        gameInfoJson = JSON.parse(gameInfo);
+                        // ajout du nom du jeu
+                        var game = document.createElement("span");
+                        game.id = "game" + search;
+                        game.className = "infos";
+                        game.innerHTML = "Jeu : " + gameInfoJson["data"][0]["name"] + "<br>";
+                        doc.appendChild(game);
+                    });
 
                     //ajout du nombre de spectateur
                     var viewers = document.createElement("span");
                     viewers.id = "viewers" + search;
                     viewers.className = "infos";
-                    viewers.innerHTML = "Spectateur : " + jsonRep["stream"]["viewers"] + "<br>";
+                    viewers.innerHTML = "Spectateur : " + jsonRep["data"][0]["viewer_count"] + "<br>";
                     doc.appendChild(viewers);
 
                     var now = new Date(); // récupération de la date actuelle
-                    //récupération de l'année, du mois, du jour, de l'heure, des minutes et des secondes de la date de création du stream
-                    var Ad = jsonRep["stream"]["created_at"].slice(0, 4);
-                    var Mod = jsonRep["stream"]["created_at"].slice(5, 7);
-                    var Jd = jsonRep["stream"]["created_at"].slice(8, 10);
-                    var Hd = jsonRep["stream"]["created_at"].slice(11, 13);
-                    var Md = jsonRep["stream"]["created_at"].slice(14, 16);
-                    var Sd = jsonRep["stream"]["created_at"].slice(17, 19);
-
-                    /*var later = new Date(Ad, (Mod-1), Jd, Hd, Md, Sd);*/ //création d'un objet Date avec la date de la création du stream
-                    var later = new Date(Ad, (Mod - 1), Jd, (parseInt(Hd) + 2), Md, Sd);
+                    var later = new Date(jsonRep["data"][0]["started_at"])
                     var tempS = Math.floor((now - later) / 1000); //récupération du nombre de seconde du live (date actuelle - date de création du stream), on divise par 1000 car résultat en ms
-                    if (tempS < 0)
-                    {
-                      var later = new Date(Ad, (Mod - 1), Jd, Hd, Md, Sd);
-                      var tempS = Math.floor((now - later) / 1000);
-                    }
 
                     dateDeb[search] = later; //enregistrement de la date de debut dans un tableau
 
@@ -174,14 +187,14 @@ jQuery(document).ready(function() {
             }
 
             if (openInfo == "only") {
-              if (inLive[search] == true) {
-                $("#" + chaine[search] + "Button").hide(); //cacher le bouton pour ouvrir les infos
-                $("#" + chaine[search]).slideDown(400); //montrer les infos
-              }
-              if (inLive[search] == false) {
-                $("#" + chaine[search] + "Button").slideDown(400); //Montrer le bouton pour ouvrir les infos
-                $("#" + chaine[search]).hide(); //cacher les infos
-              }
+                if (inLive[search] == true) {
+                    $("#" + chaine[search] + "Button").hide(); //cacher le bouton pour ouvrir les infos
+                    $("#" + chaine[search]).slideDown(400); //montrer les infos
+                }
+                if (inLive[search] == false) {
+                    $("#" + chaine[search] + "Button").slideDown(400); //Montrer le bouton pour ouvrir les infos
+                    $("#" + chaine[search]).hide(); //cacher les infos
+                }
             }
 
             if (openInfo == "always") {
@@ -192,35 +205,35 @@ jQuery(document).ready(function() {
             search++;
             if (search == 3) {
                 //-------Event Listener : Création du player--------//
-                $('#player' + chaine[0]).click(function() {
-                    window.open('https://player.twitch.tv/?volume='+ volume + '&channel=' + chaine[0], 'Wankil Studio', 'menubar=no, scrollbars=no, width=870, height=530');
+                $('#player' + chaine[0]).click(function () {
+                    window.open('https://player.twitch.tv/?volume=' + volume + '&channel=' + chaine[0], 'Wankil Studio', 'menubar=no, scrollbars=no, width=870, height=530');
                     window.close();
                 });
-                $('#player' + chaine[1]).click(function() {
-                    window.open('https://player.twitch.tv/?volume='+ volume + '&channel=' + chaine[1], 'Wankil Studio', 'menubar=no, scrollbars=no, width=870, height=530');
+                $('#player' + chaine[1]).click(function () {
+                    window.open('https://player.twitch.tv/?volume=' + volume + '&channel=' + chaine[1], 'Wankil Studio', 'menubar=no, scrollbars=no, width=870, height=530');
                     window.close();
                 });
-                $('#player' + chaine[2]).click(function() {
-                    window.open('https://player.twitch.tv/?volume='+ volume + '&channel=' + chaine[2], 'Wankil Studio', 'menubar=no, scrollbars=no, width=870, height=530');
+                $('#player' + chaine[2]).click(function () {
+                    window.open('https://player.twitch.tv/?volume=' + volume + '&channel=' + chaine[2], 'Wankil Studio', 'menubar=no, scrollbars=no, width=870, height=530');
                     window.close();
                 });
 
                 //-------Event Listener : Lien vers twitch--------//
-                $('#twitch' + chaine[0]).click(function() {
+                $('#twitch' + chaine[0]).click(function () {
                     var action_url = "http://www.twitch.tv/" + chaine[0];
                     chrome.tabs.create({
                         url: action_url
                     });
                     window.close();
                 });
-                $('#twitch' + chaine[1]).click(function() {
+                $('#twitch' + chaine[1]).click(function () {
                     var action_url = "http://www.twitch.tv/" + chaine[1];
                     chrome.tabs.create({
                         url: action_url
                     });
                     window.close();
                 });
-                $('#twitch' + chaine[2]).click(function() {
+                $('#twitch' + chaine[2]).click(function () {
                     var action_url = "http://www.twitch.tv/" + chaine[2];
                     chrome.tabs.create({
                         url: action_url
@@ -237,7 +250,7 @@ jQuery(document).ready(function() {
     }
 
     //LANCEMENT GENERALE
-    chrome.storage.sync.get('firstUse', function(get) { //Vérif si l'extension à deja été lancé
+    chrome.storage.sync.get('firstUse', function (get) { //Vérif si l'extension à deja été lancé
         if (get['firstUse'] == 1 || localStorage['firstUse'] == 1) {
             request(readData); //Démarrage du système
         } else {
@@ -256,7 +269,7 @@ jQuery(document).ready(function() {
                 time.innerHTML = "Live depuis : " + tempLive + "<br>";
             }
         }
-        setTimeout(function() {
+        setTimeout(function () {
             reloadTime();
         }, 1000);
     }
@@ -314,11 +327,11 @@ jQuery(document).ready(function() {
     //------Coulissement des informations------//
 
     for (let i = 0; i < 3; i++) {
-        $("#" + chaine[i] + "Button").click(function() {
+        $("#" + chaine[i] + "Button").click(function () {
             $("#" + chaine[i] + "Button").slideUp(400);
             $("#" + chaine[i]).slideDown(400);
         });
-        $("#" + chaine[i]).click(function() {
+        $("#" + chaine[i]).click(function () {
             $("#" + chaine[i] + "Button").slideDown(400);
             $("#" + chaine[i]).slideUp(400);
         });
@@ -338,8 +351,8 @@ function firstUse() {
     img1.id = "img1";
     doc.appendChild(img1);
 
-    $('#img1').click(function() {
-        $('#img1').fadeTo(300, 0, function() {
+    $('#img1').click(function () {
+        $('#img1').fadeTo(300, 0, function () {
             $('#img1').remove();
             var img2 = document.createElement('img');
             img2.src = "FirstUse/menu1.png";
@@ -348,8 +361,8 @@ function firstUse() {
             doc.appendChild(img2);
             $("#img2").fadeTo(300, 1);
 
-            img2.addEventListener('click', function() {
-                $('#img2').fadeTo(300, 0, function() {
+            img2.addEventListener('click', function () {
+                $('#img2').fadeTo(300, 0, function () {
                     $('#img2').remove();
                     var img3 = document.createElement('img');
                     img3.src = "FirstUse/noLive.png";
@@ -358,8 +371,8 @@ function firstUse() {
                     doc.appendChild(img3);
                     $("#img3").fadeTo(300, 1);
 
-                    img3.addEventListener('click', function() {
-                        $('#img3').fadeTo(300, 0, function() {
+                    img3.addEventListener('click', function () {
+                        $('#img3').fadeTo(300, 0, function () {
                             $('#img3').remove();
                             var img4 = document.createElement('img');
                             img4.src = "FirstUse/menu2.png";
@@ -368,8 +381,8 @@ function firstUse() {
                             doc.appendChild(img4);
                             $("#img4").fadeTo(300, 1);
 
-                            img4.addEventListener('click', function() {
-                                $('#img4').fadeTo(300, 0, function() {
+                            img4.addEventListener('click', function () {
+                                $('#img4').fadeTo(300, 0, function () {
                                     $('#img4').remove();
                                     var img5 = document.createElement('img');
                                     img5.src = "FirstUse/menu3.png";
@@ -378,8 +391,8 @@ function firstUse() {
                                     doc.appendChild(img5);
                                     $("#img5").fadeTo(300, 1);
 
-                                    img5.addEventListener('click', function() {
-                                        $('#img5').fadeTo(300, 0, function() {
+                                    img5.addEventListener('click', function () {
+                                        $('#img5').fadeTo(300, 0, function () {
                                             $('#img5').remove();
                                             var img6 = document.createElement('img');
                                             img6.src = "FirstUse/menu4.png";
@@ -388,8 +401,8 @@ function firstUse() {
                                             doc.appendChild(img6);
                                             $("#img6").fadeTo(300, 1);
 
-                                            img6.addEventListener('click', function() {
-                                                $('#img6').fadeTo(300, 0, function() {
+                                            img6.addEventListener('click', function () {
+                                                $('#img6').fadeTo(300, 0, function () {
                                                     $('#img6').remove();
                                                     var img7 = document.createElement('img');
                                                     img7.src = "FirstUse/menu5.png";
@@ -398,8 +411,8 @@ function firstUse() {
                                                     doc.appendChild(img7);
                                                     $("#img7").fadeTo(300, 1);
 
-                                                    img7.addEventListener('click', function() {
-                                                        $('#img7').fadeTo(300, 0, function() {
+                                                    img7.addEventListener('click', function () {
+                                                        $('#img7').fadeTo(300, 0, function () {
                                                             $('#img7').remove();
                                                             var img8 = document.createElement('img');
                                                             img8.src = "FirstUse/gooduse.png";
@@ -408,11 +421,11 @@ function firstUse() {
                                                             doc.appendChild(img8);
                                                             $("#img8").fadeTo(300, 1);
 
-                                                            img8.addEventListener('click', function() {
+                                                            img8.addEventListener('click', function () {
                                                                 localStorage['firstUse'] = 1;
                                                                 chrome.storage.sync.set({
                                                                     'firstUse': 1
-                                                                }, function() {});
+                                                                }, function () { });
                                                                 window.close();
                                                             });
                                                         });
