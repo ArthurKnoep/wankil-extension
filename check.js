@@ -248,10 +248,10 @@ jQuery(document).ready(function() {
     function reloadTime() {
         //Actualisation du temp de stream
         var tempLive;
-        var tempActuelle = new Date();
+        var tempActuel = new Date();
         for (i = 0; i < 3; i++) {
             if (inLive[i] == true) {
-                tempLive = convertTime(Math.floor((tempActuelle - dateDeb[i]) / 1000));
+                tempLive = convertTime(Math.floor((tempActuel - dateDeb[i]) / 1000));
                 var time = document.getElementById('time' + i);
                 time.innerHTML = "Live depuis : " + tempLive + "<br>";
             }
@@ -313,32 +313,16 @@ jQuery(document).ready(function() {
 
     //------Coulissement des informations------//
 
-    $("#" + chaine[0] + "Button").click(function() {
-        $("#" + chaine[0] + "Button").slideUp(400);
-        $("#" + chaine[0]).slideDown(400);
-    });
-    $("#" + chaine[0]).click(function() {
-        $("#" + chaine[0] + "Button").slideDown(400);
-        $("#" + chaine[0]).slideUp(400);
-    });
-
-    $("#" + chaine[1] + "Button").click(function() {
-        $("#" + chaine[1] + "Button").slideUp(400);
-        $("#" + chaine[1]).slideDown(400);
-    });
-    $("#" + chaine[1]).click(function() {
-        $("#" + chaine[1] + "Button").slideDown(400);
-        $("#" + chaine[1]).slideUp(400);
-    });
-
-    $("#" + chaine[2] + "Button").click(function() {
-        $("#" + chaine[2] + "Button").slideUp(400);
-        $("#" + chaine[2]).slideDown(400);
-    });
-    $("#" + chaine[2]).click(function() {
-        $("#" + chaine[2] + "Button").slideDown(400);
-        $("#" + chaine[2]).slideUp(400);
-    });
+    for (let i = 0; i < 3; i++) {
+        $("#" + chaine[i] + "Button").click(function() {
+            $("#" + chaine[i] + "Button").slideUp(400);
+            $("#" + chaine[i]).slideDown(400);
+        });
+        $("#" + chaine[i]).click(function() {
+            $("#" + chaine[i] + "Button").slideDown(400);
+            $("#" + chaine[i]).slideUp(400);
+        });
+    }
 });
 
 

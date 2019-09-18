@@ -1,3 +1,6 @@
+EDIT [19/01/2018] - v1.4.5
+    Modification mineur
+
 EDIT [24/05/2017] - v1.4.4
      Compensation du décallage horaire
 
