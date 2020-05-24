@@ -87,3 +87,18 @@ export function addViewerCounter(parent: JQuery, login: string, viewerCount: num
                 .append($('<br/>'))
         );
 }
+
+export function addTimer(parent: JQuery, login: string, duration: string) {
+    parent
+        .append(
+            $('<span></span>')
+                .text(`Live depuis: ${duration}`)
+                .attr('id', `time-${login}`)
+                .addClass('infos')
+                .append($('<br/>'))
+        );
+}
+
+export function updateTimer(login: string, duration: string) {
+    $(`#time-${login}`).text(`Live depuis: ${duration}`);
+}

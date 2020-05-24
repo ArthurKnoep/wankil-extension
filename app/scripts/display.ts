@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import moment from 'moment';
 import { TokenManager } from './token';
 import { Game, GenericResponse, Requester, Stream } from './requester';
 import { firstUse as handleFirstUse } from './firstUse';
@@ -7,12 +8,12 @@ import { userIdToLogin } from './config';
 import {
     addGameInfo,
     addLiveTitle,
-    addRecIcon,
+    addRecIcon, addTimer,
     addTwitchIcon,
     addViewerCounter,
     createStreamerGroup,
     hideLoader,
-    setErrorMessage
+    setErrorMessage, updateTimer
 } from './view';
 
 const findStream = (streams: Stream[], userId: string): Stream => {
@@ -21,6 +22,14 @@ const findStream = (streams: Stream[], userId: string): Stream => {
 
 const findGame = (games: Game[], gameId: string): Game => {
     return games.find(game => game.id === gameId);
+}
+
+const prettyPrintLiveDuration = (start: string): string => {
+    return moment.utc(moment(new Date()).diff(moment(new Date(start)))).format("HH:mm:ss");
+}
+
+const handleUpdateTime = (login: string, startedAt: string) => () => {
+    updateTimer(login, prettyPrintLiveDuration(startedAt));
 }
 
 const handleDisplay = async (parameters: Parameters, requester: Requester) => {
@@ -66,6 +75,8 @@ const handleDisplay = async (parameters: Parameters, requester: Requester) => {
                 addGameInfo(info, streamer.login, game.name);
             }
             addViewerCounter(info, streamer.login, stream.viewer_count);
+            addTimer(info, streamer.login, prettyPrintLiveDuration(stream.started_at));
+            setInterval(handleUpdateTime(streamer.login, stream.started_at), 1000);
         }
 
         if (openMode === 'never' || (openMode === 'only' && !stream)) {
