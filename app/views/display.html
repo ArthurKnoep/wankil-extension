@@ -47,7 +47,7 @@
       margin-bottom: 0.5em;
     }
 
-    .openInfo {
+    .open-info {
       border: 2px solid rgba(0, 0, 0, 0.45);
       margin-bottom: 5px;
       border-radius: 5px;
@@ -55,9 +55,9 @@
       cursor: pointer;
     }
 
-    .iconTwitch,
-    .iconPlayer,
-    .iconNoNet {
+    .icon-twitch,
+    .icon-player,
+    .icon-no-net {
       width: 20px;
       margin-left: 5px;
     }
@@ -119,18 +119,25 @@
       color: rgba(128, 128, 128, 0.64);
       transition: 0.5s;
     }
+
+    .error-msg {
+      color: tomato;
+      font-size: 1.2rem;
+      line-height: 1.5rem;
+    }
+
+    .arrow-btn {
+      width: 20px;
+      margin-left: 5px;
+      vertical-align: middle;
+    }
   </style>
   <meta charset="utf-8" />
 </head>
 
 <body id="body">
-  <div id="status"><img src="app/img/load.gif" id="loader" alt="Chargement" />
-    <div id="wankilstudioButton" class="openInfo">Laink et Terracid <img src="app/img/fleche.png" style="width: 20px; margin-left: 5px; vertical-align: middle"/></div>
-    <div id="wankilstudio" class="info"></div>
-    <div id="lainkButton" class="openInfo">Laink <img src="app/img/fleche.png" style="width: 20px; margin-left: 5px; vertical-align: middle"/></div>
-    <div id="laink" class="info"></div>
-    <div id="terracidButton" class="openInfo">Terracid <img src="app/img/fleche.png" style="width: 20px; margin-left: 5px; vertical-align: middle"/></div>
-    <div id="terracid" class="info"></div>
+  <div id="status">
+    <img src="../img/load.gif" id="loader" alt="Chargement" />
   </div>
   <div id="button">
     <!--<a href="http://twitch.tv/lainkk" target="_blank">
@@ -149,8 +156,6 @@
   <div id="link">
     <a href="mailto:arthur.knoepflin@gmail.com?subject=Signalement%20de%20Bug%20[Wankil%20Extension]" target="_blank">Signaler un bug</a>
   </div>
-  <script src="jquery/jquery.js"></script>
-  <script src="check.js"></script>
-  <script src="snow.js"></script>
+  <script src="/dist/display.js"></script>
 </body>
 </html>
