@@ -42,10 +42,60 @@ export class Parameters {
         })
     }
 
+    public async getNoel(): Promise<boolean> {
+        return new Promise(resolve => {
+            chrome.storage.sync.get('modeNoel', function (get) {
+                if (get['modeNoel'] !== undefined) {
+                    resolve(get['modeNoel'] === '1');
+                } else {
+                    resolve(true);
+                }
+            });
+        })
+    }
+
+    public getNotification(): boolean {
+        if (localStorage.getItem('notif') === null) {
+            return true;
+        }
+        return localStorage.getItem('notif') === '1';
+    }
+
+    public getReload(): number {
+        if (localStorage.getItem('reload') === null) {
+            return 60000;
+        }
+        return parseInt(localStorage.getItem('reload'), 10);
+    }
+
     public async setFirstUse() {
         return new Promise(resolve => {
             chrome.storage.sync.set({
                 'firstUse': 1
+            }, () => resolve());
+        });
+    }
+
+    public async setVolume(volume: number) {
+        return new Promise(resolve => {
+            chrome.storage.sync.set({
+                'volume': volume
+            }, () => resolve());
+        });
+    }
+
+    public setInfoLive(mode: "never" | "live" | "always") {
+        return new Promise(resolve => {
+            chrome.storage.sync.set({
+                'infoLive': mode
+            }, () => resolve());
+        });
+    }
+
+    public setNoel(value: string) {
+        return new Promise(resolve => {
+            chrome.storage.sync.set({
+                'modeNoel': value
             }, () => resolve());
         });
     }

@@ -2,8 +2,9 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        background: ['./app/scripts/background.ts'],
-        display: ['./app/scripts/display.ts']
+        background: './app/scripts/background.ts',
+        display: './app/scripts/display.ts',
+        options: './app/scripts/options.ts',
     },
     module: {
         rules: [
