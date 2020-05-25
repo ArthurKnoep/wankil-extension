@@ -15,7 +15,6 @@
   },
   "permissions": [
     "notifications",
-    "unlimitedStorage",
     "storage",
     "http://api.twitch.tv/*"
   ],

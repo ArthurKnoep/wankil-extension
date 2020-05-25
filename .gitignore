@@ -3,6 +3,7 @@
 
 # Build
 app/dist
+bundle.zip
 
 # Dependencies
 node_modules
