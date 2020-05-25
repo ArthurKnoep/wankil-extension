@@ -50,6 +50,7 @@ const handleDisplay = async (parameters: Parameters, requester: Requester) => {
     } catch (e) {
         hideLoader();
         setErrorMessage("Une erreur s'est produite, verifier votre connexion internet");
+        return;
     }
     const openMode = await parameters.getInfoLive();
 

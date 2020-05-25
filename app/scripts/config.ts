@@ -1,19 +1,23 @@
 export const userIdToLogin = {
     "31289086": {
         login: "wankilstudio",
-        display: "Laink et Terracid"
+        display: "Laink et Terracid",
+        plural: true
     },
     "89872865": {
         login: "laink",
-        display: "Laink"
+        display: "Laink",
+        plural: false
     },
     "46328864": {
         login: "terracid",
-        display: "Terracid"
+        display: "Terracid",
+        plural: false
     },
-    "76508554": {
-        login: "anomaly",
-        display: "Anomaly"
+    "31239503": {
+        login: "esl_csgo",
+        display: "ESL CSGO",
+        plural: true
     }
 }
 export const clientId = "3i3mp02jq4d7tbbkhfjzhtbpx3iou99";

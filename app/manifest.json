@@ -4,13 +4,13 @@
   "manifest_version": 2,
   "version": "2.0.0",
   "icons": {
-    "16": "img/16.png",
-    "48": "img/48.png",
-    "128": "img/128.png"
+    "16": "/img/16.png",
+    "48": "/img/48.png",
+    "128": "/img/128.png"
   },
   "description": "Soyez le premier informé lorsque Laink et Terracid sont en live ;)",
   "background": {
-    "scripts": ["dist/background.js"],
+    "scripts": ["/dist/background.js"],
     "persistent": true
   },
   "permissions": [
@@ -20,12 +20,12 @@
     "http://api.twitch.tv/*"
   ],
   "web_accessible_resources": [
-    "img/icon.png"
+    "/img/icon.png"
   ],
-  "options_page": "views/options.html",
+  "options_page": "/views/options.html",
   "browser_action": {
-    "default_icon": "img/icon.png",
-    "default_popup": "views/display.html",
+    "default_icon": "/img/icon.png",
+    "default_popup": "/views/display.html",
     "default_title": "Wankil Studio"
   }
 }
