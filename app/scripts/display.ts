@@ -15,6 +15,7 @@ import {
     hideLoader,
     setErrorMessage, updateTimer
 } from './view';
+import { Snow } from './snow';
 
 const findStream = (streams: Stream[], userId: string): Stream => {
     return streams.find(stream => stream.user_id === userId);
@@ -94,14 +95,19 @@ const handleDisplay = async (parameters: Parameters, requester: Requester) => {
     const parameters = new Parameters();
     const tokenManager = new TokenManager();
     const requester = new Requester(tokenManager);
+    const snow = new Snow();
 
     const firstUse = await parameters.getFirstUse();
+    const noel = await parameters.getNoel();
     if (firstUse) {
         handleFirstUse();
     } else {
         Object.entries(userIdToLogin).forEach(([_, v]) => {
             createStreamerGroup(v.login, v.display);
         });
+        if (new Date().getMonth() === 11 && noel) {
+            snow.start();
+        }
         await handleDisplay(parameters, requester);
     }
 })();
