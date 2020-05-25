@@ -7,11 +7,13 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack --config webpack.dev.js",
-    "build:prod": "webpack --config webpack.prod.js"
+    "build:prod": "webpack --config webpack.prod.js",
+    "bundle": "yarn run build:prod && cd app && bestzip ../bundle.zip dist/ first-use/*.png img/ views/ manifest.json"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.114",
     "@types/jquery": "^3.3.38",
+    "bestzip": "^2.1.5",
     "ts-loader": "^7.0.4",
     "typescript": "^3.9.3",
     "webpack": "^4.43.0",

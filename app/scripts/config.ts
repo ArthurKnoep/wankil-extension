@@ -13,11 +13,6 @@ export const userIdToLogin = {
         login: "terracid",
         display: "Terracid",
         plural: false
-    },
-    "31239503": {
-        login: "esl_csgo",
-        display: "ESL CSGO",
-        plural: true
     }
 }
 export const clientId = "3i3mp02jq4d7tbbkhfjzhtbpx3iou99";
