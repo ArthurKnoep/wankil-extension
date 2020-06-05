@@ -1,11 +1,9 @@
 import { userIdToLogin } from './config';
 import { Parameters } from './parameters';
-import { TokenManager } from './token';
-import { GenericResponse, Requester, Stream } from './requester';
+import { Requester, Stream } from './requester';
 
 const parameter = new Parameters();
-const tokenManager = new TokenManager();
-const requester = new Requester(tokenManager);
+const requester = new Requester();
 const notifications = {};
 const notificationsMap = {};
 
@@ -50,7 +48,7 @@ const handleCheckStreams = async () => {
     const reloadTime = parameter.getReload();
 
 
-    let streams: GenericResponse<Stream[]>
+    let streams: Stream[]
     try {
         streams = await requester.queryStreams(Object.keys(userIdToLogin));
     } catch (e) {
@@ -64,13 +62,14 @@ const handleCheckStreams = async () => {
 
     if (notification) {
         Object.entries(userIdToLogin).forEach(([streamerId, streamer]) => {
-            const stream = findStream(streams.data, streamerId);
+            const stream = findStream(streams, streamerId);
             if (stream && !notifications[streamerId]) {
                 chrome.notifications.create("", {
                     type:    "basic",
                     iconUrl: "/img/icon.png",
                     title:   "Wankil Studio",
                     message: `${streamer.display} ${streamer.plural ? 'sont' : 'est'} en live !!\n${stream.title}`,
+                    contextMessage: `Sur : ${stream.game_name}`,
                     buttons: [{
                         title: "Ouvrir le player",
                         iconUrl: "/img/twitch.png"
@@ -85,13 +84,13 @@ const handleCheckStreams = async () => {
         });
     }
 
-    if (streams.data.length === 0) {
+    if (streams.length === 0) {
         setTitle("Wankil Studio - Pas de live");
         setBadgeText("");
         setIcon("/img/icon.png");
     } else {
-        setTitle(`Wankil Studio - ${streams.data.length} live${streams.data.length > 1 ? 's' : ''} en cours !!`);
-        setBadgeText(streams.data.length.toString());
+        setTitle(`Wankil Studio - ${streams.length} live${streams.length > 1 ? 's' : ''} en cours !!`);
+        setBadgeText(streams.length.toString());
         setIcon("img/icon-onlive.png");
     }
     setTimeout(handleCheckStreams, reloadTime);

@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import moment from 'moment';
-import { TokenManager } from './token';
-import { Game, GenericResponse, Requester, Stream } from './requester';
+import { Requester, Stream } from './requester';
 import { firstUse as handleFirstUse } from './firstUse';
 import { Parameters } from './parameters';
 import { userIdToLogin } from './config';
@@ -21,10 +20,6 @@ const findStream = (streams: Stream[], userId: string): Stream => {
     return streams.find(stream => stream.user_id === userId);
 }
 
-const findGame = (games: Game[], gameId: string): Game => {
-    return games.find(game => game.id === gameId);
-}
-
 const prettyPrintLiveDuration = (start: string): string => {
     return moment.utc(moment(new Date()).diff(moment(new Date(start)))).format("HH:mm:ss");
 }
@@ -34,19 +29,9 @@ const handleUpdateTime = (login: string, startedAt: string) => () => {
 }
 
 const handleDisplay = async (parameters: Parameters, requester: Requester) => {
-    let streams: GenericResponse<Stream[]>;
-    let games: GenericResponse<Game[]>;
+    let streams: Stream[];
     try {
         streams = await requester.queryStreams(Object.keys(userIdToLogin));
-        const gamesIdNeeded = streams.data.map(stream => stream.game_id);
-        if (gamesIdNeeded.length) {
-            games = await requester.queryGames(gamesIdNeeded);
-        } else {
-            games = {
-                data: [],
-                pagination: {}
-            };
-        }
     } catch (e) {
         hideLoader();
         setErrorMessage("Une erreur s'est produite, verifier votre connexion internet");
@@ -57,7 +42,7 @@ const handleDisplay = async (parameters: Parameters, requester: Requester) => {
     hideLoader();
 
     Object.entries(userIdToLogin).forEach(([streamerId, streamer]) => {
-        const stream = findStream(streams.data, streamerId);
+        const stream = findStream(streams, streamerId);
         const openButton = $(`#${streamer.login}-btn`);
         const info = $(`#${streamer.login}`);
 
@@ -72,10 +57,7 @@ const handleDisplay = async (parameters: Parameters, requester: Requester) => {
         } else {
             info.text(`${streamer.display}  en live !!!!`).append($('<br/>'));
             addLiveTitle(info, streamer.login, stream.title);
-            const game = findGame(games.data, stream.game_id);
-            if (game) {
-                addGameInfo(info, streamer.login, game.name);
-            }
+            addGameInfo(info, streamer.login, stream.game_name);
             addViewerCounter(info, streamer.login, stream.viewer_count);
             addTimer(info, streamer.login, prettyPrintLiveDuration(stream.started_at));
             setInterval(handleUpdateTime(streamer.login, stream.started_at), 1000);
@@ -94,8 +76,7 @@ const handleDisplay = async (parameters: Parameters, requester: Requester) => {
 
 (async () => {
     const parameters = new Parameters();
-    const tokenManager = new TokenManager();
-    const requester = new Requester(tokenManager);
+    const requester = new Requester();
     const snow = new Snow();
 
     const firstUse = await parameters.getFirstUse();

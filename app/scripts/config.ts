@@ -14,5 +14,4 @@ export const userIdToLogin = {
         display: "Terracid",
         plural: false
     }
-}
-export const clientId = "3i3mp02jq4d7tbbkhfjzhtbpx3iou99";
+};

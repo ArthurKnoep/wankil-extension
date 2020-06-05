@@ -1,3 +1,6 @@
+EDIT [05/06/2020] - v2.0.1
+    Fix du problème de surcharge des tokens (utilisation d'une api intermediaire)
+
 EDIT [24/05/2020] - v2.0.0
     Nouvelle architecture du code / Migration vers typescript
     Ajout d'un système d'authentification pour la nouvelle API Twitch Helix
